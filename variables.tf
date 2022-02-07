@@ -1,43 +1,16 @@
-variable "resource_name" {
-  type    = string
-  description = "Azure Kubernetes Cluster"
-}
-variable "location" {
-  type        = string
-  description = "location where the resource should be created"
-}
-variable "resource_group_name" {
-  type        = string
-  description = "resource_group whitin the resource should be created"
-}
-variable "tags" {
+variable "kubernetes_cluster" {
   type        = any
   default     = {}
-  description = "mapping of tags to assign, default settings are defined within locals and merged with var settings"
-}
-# resource definition
-variable "kubernetes_cluster" {
-  type    = any
-  default = {}
   description = "resource definition, default settings are defined within locals and merged with var settings"
-}
-# resource configuration
-variable "kubernetes_cluster_config" {
-  type    = any
-  default = {}
-  description = "resource configuration, default settings are defined within locals and merged with var settings"
 }
 
 locals {
   default = {
-    tags = {}
     # resource definition
     kubernetes_cluster = {
+      name                                = ""
       private_cluster_public_fqdn_enabled = false
-      node_resource_group    = ""
-    }
-    # resource configuration
-    kubernetes_cluster_config = {
+      node_resource_group                 = ""
       role_based_access_control = {
         enabled = true
       }
@@ -47,6 +20,7 @@ locals {
         load_balancer_sku = "standard"
       }
       default_node_pool = {
+        name                   = ""
         availability_zones     = [1, 2, 3]
         enable_auto_scaling    = true
         enable_host_encryption = false
@@ -75,19 +49,24 @@ locals {
           enabled = false
         }
       }
-      role_assignment = {}
     }
   }
 
-  # merge custom and default values
-  tags               = merge(local.default.tags, var.tags)
-  kubernetes_cluster = merge(local.default.kubernetes_cluster, var.kubernetes_cluster)
-
-  # deep merge custom and default values
-  kubernetes_cluster_config = {
-    # get all config
-    for config in keys(local.default.kubernetes_cluster_config) :
-    config => merge(local.default.kubernetes_cluster_config[config], var.kubernetes_cluster_config[config])
+  # compare and merge custom and default values
+  kubernetes_cluster_values = {
+    for kubernetes_cluster in keys(var.kubernetes_cluster) :
+    kubernetes_cluster => merge(local.default.kubernetes_cluster, var.kubernetes_cluster[kubernetes_cluster])
+  }
+  # merge all custom and default values
+  kubernetes_cluster = {
+    for kubernetes_cluster in keys(var.kubernetes_cluster) :
+    kubernetes_cluster => merge(
+      local.kubernetes_cluster_values[kubernetes_cluster],
+      {
+        for config in ["role_based_access_control", "service_principal", "network_profile", "default_node_pool", "addon_profile"] :
+        config => merge(local.default.kubernetes_cluster[config], local.kubernetes_cluster_values[kubernetes_cluster][config])
+      }
+    )
   }
 }
 
