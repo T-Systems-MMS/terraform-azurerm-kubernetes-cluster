@@ -12,10 +12,10 @@ locals {
       dns_prefix                          = ""
       node_resource_group                 = ""
       api_server_authorized_ip_ranges     = []
-      local_account_disabled = false
-      private_cluster_enabled = false
+      local_account_disabled              = false
+      private_cluster_enabled             = false
       private_cluster_public_fqdn_enabled = false
-      sku_tier = "Free"
+      sku_tier                            = "Free"
       role_based_access_control = {
         enabled = true
       }
@@ -64,7 +64,7 @@ locals {
       }
       linux_profile = {
         admin_username = ""
-        ssh_key = {}
+        ssh_key        = {}
       }
     }
   }
