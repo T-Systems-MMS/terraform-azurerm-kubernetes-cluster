@@ -9,12 +9,25 @@ locals {
     # resource definition
     kubernetes_cluster = {
       name                                = ""
-      private_cluster_public_fqdn_enabled = false
+      dns_prefix                          = ""
       node_resource_group                 = ""
+      api_server_authorized_ip_ranges     = []
+      local_account_disabled = false
+      private_cluster_enabled = false
+      private_cluster_public_fqdn_enabled = false
+      sku_tier = "Free"
       role_based_access_control = {
         enabled = true
       }
-      service_principal = {}
+      service_principal = {
+        client_id = ""
+      }
+      identity = {
+        type = ""
+      }
+      kubelet_identity = {
+        client_id = ""
+      }
       network_profile = {
         network_plugin    = "azure"
         load_balancer_sku = "standard"
@@ -48,6 +61,10 @@ locals {
         oms_agent = {
           enabled = false
         }
+      }
+      linux_profile = {
+        admin_username = ""
+        ssh_key = {}
       }
     }
   }

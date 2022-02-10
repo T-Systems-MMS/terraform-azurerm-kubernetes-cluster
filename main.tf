@@ -11,8 +11,12 @@ resource "azurerm_kubernetes_cluster" "kubernetes_cluster" {
   location                            = local.kubernetes_cluster[each.key].location
   resource_group_name                 = local.kubernetes_cluster[each.key].resource_group_name
   dns_prefix                          = local.kubernetes_cluster[each.key].dns_prefix
-  private_cluster_public_fqdn_enabled = local.kubernetes_cluster[each.key].private_cluster_public_fqdn_enabled
   node_resource_group                 = local.kubernetes_cluster[each.key].node_resource_group
+  api_server_authorized_ip_ranges    = local.kubernetes_cluster[each.key].api_server_authorized_ip_ranges
+  local_account_disabled = local.kubernetes_cluster[each.key].local_account_disabled
+  private_cluster_enabled = local.kubernetes_cluster[each.key].private_cluster_enabled
+  private_cluster_public_fqdn_enabled = local.kubernetes_cluster[each.key].private_cluster_public_fqdn_enabled
+  sku_tier = local.kubernetes_cluster[each.key].sku_tier
 
   role_based_access_control {
     enabled = local.kubernetes_cluster[each.key].role_based_access_control.enabled
@@ -23,6 +27,30 @@ resource "azurerm_kubernetes_cluster" "kubernetes_cluster" {
     content {
       client_id     = local.kubernetes_cluster[each.key].service_principal.client_id
       client_secret = local.kubernetes_cluster[each.key].service_principal.client_secret
+    }
+  }
+
+  dynamic "identity" {
+    for_each = local.kubernetes_cluster[each.key].identity.type == "SystemAssigned" ? [1] : []
+    content {
+      type     = local.kubernetes_cluster[each.key].identity.type
+    }
+  }
+
+  dynamic "identity" {
+    for_each = local.kubernetes_cluster[each.key].identity.type == "UserAssigned" ? [1] : []
+    content {
+      type     = local.kubernetes_cluster[each.key].identity.type
+      user_assigned_identity_id = local.kubernetes_cluster[each.key].identity.user_assigned_identity_id
+    }
+  }
+
+  dynamic "kubelet_identity" {
+    for_each = local.kubernetes_cluster[each.key].kubelet_identity.client_id != "" ? [1] : []
+    content {
+      client_id     = local.kubernetes_cluster[each.key].kubelet_identity.client_id
+      object_id = local.kubernetes_cluster[each.key].kubelet_identity.object_id
+      user_assigned_identity_id = local.kubernetes_cluster[each.key].kubelet_identity.user_assigned_identity_id
     }
   }
 
@@ -87,6 +115,20 @@ resource "azurerm_kubernetes_cluster" "kubernetes_cluster" {
       content {
         enabled                    = local.kubernetes_cluster[each.key].addon_profile.oms_agent.enabled
         log_analytics_workspace_id = local.kubernetes_cluster[each.key].addon_profile.oms_agent.log_analytics_workspace_id
+      }
+    }
+  }
+
+  dynamic "linux_profile" {
+    for_each = local.kubernetes_cluster[each.key].linux_profile.admin_username != "" ? [1] : []
+    content {
+      admin_username     = local.kubernetes_cluster[each.key].linux_profile.admin_username
+
+      dynamic "ssh_key" {
+        for_each = local.kubernetes_cluster[each.key].linux_profile.ssh_key
+        content {
+          key_data = local.kubernetes_cluster[each.key].linux_profile.ssh_key[ssh_key.key].key_data
+        }
       }
     }
   }
