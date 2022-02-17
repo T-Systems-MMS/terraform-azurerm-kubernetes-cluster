@@ -1,5 +1,5 @@
 module "kubernetes_cluster" {
-  source = "../modules/azure/terraform-kubernetes-cluster"
+  source = "registry.terraform.io/T-Systems-MMS/kubernete-cluster/azurerm"
   kubernetes_cluster = {
     env = {
       name                      = "service-env-aks-cluster"
