@@ -16,7 +16,7 @@ locals {
       disk_encryption_set_id              = null
       http_application_routing_enabled    = false
       kubernetes_version                  = null
-      local_account_disabled              = true
+      local_account_disabled              = false
       node_resource_group                 = null
       oidc_issuer_enabled                 = false
       open_service_mesh_enabled           = null

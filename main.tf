@@ -17,7 +17,7 @@ resource "azurerm_kubernetes_cluster" "kubernetes_cluster" {
   azure_policy_enabled                = local.kubernetes_cluster[each.key].azure_policy_enabled
   disk_encryption_set_id              = local.kubernetes_cluster[each.key].disk_encryption_set_id
   http_application_routing_enabled    = local.kubernetes_cluster[each.key].http_application_routing_enabled
-  kubernetes_version                  = local.kubernetes_cluster[each.key].kubernetes_version
+  kubernetes_version                  = local.kubernetes_cluster[each.key].kubernetes_version == null ? data.azurerm_kubernetes_service_versions.kubernetes_service_versions[each.key].latest_version : local.kubernetes_cluster[each.key].kubernetes_version
   local_account_disabled              = local.kubernetes_cluster[each.key].local_account_disabled
   node_resource_group                 = local.kubernetes_cluster[each.key].node_resource_group
   oidc_issuer_enabled                 = local.kubernetes_cluster[each.key].oidc_issuer_enabled
@@ -41,8 +41,8 @@ resource "azurerm_kubernetes_cluster" "kubernetes_cluster" {
     name                         = local.kubernetes_cluster[each.key].default_node_pool.name == "" ? each.key : local.kubernetes_cluster[each.key].default_node_pool.name
     vm_size                      = local.kubernetes_cluster[each.key].default_node_pool.vm_size
     enable_auto_scaling          = local.kubernetes_cluster[each.key].default_node_pool.enable_auto_scaling
-    max_count                    = local.kubernetes_cluster[each.key].default_node_pool.max_count
-    min_count                    = local.kubernetes_cluster[each.key].default_node_pool.min_count
+    max_count                    = local.kubernetes_cluster[each.key].default_node_pool.enable_auto_scaling == true ? local.kubernetes_cluster[each.key].default_node_pool.max_count : null
+    min_count                    = local.kubernetes_cluster[each.key].default_node_pool.enable_auto_scaling == true ? local.kubernetes_cluster[each.key].default_node_pool.min_count : null
     node_count                   = local.kubernetes_cluster[each.key].default_node_pool.node_count
     enable_host_encryption       = local.kubernetes_cluster[each.key].default_node_pool.enable_host_encryption
     enable_node_public_ip        = local.kubernetes_cluster[each.key].default_node_pool.enable_node_public_ip
@@ -52,7 +52,7 @@ resource "azurerm_kubernetes_cluster" "kubernetes_cluster" {
     node_public_ip_prefix_id     = local.kubernetes_cluster[each.key].default_node_pool.node_public_ip_prefix_id
     node_labels                  = local.kubernetes_cluster[each.key].default_node_pool.node_labels
     only_critical_addons_enabled = local.kubernetes_cluster[each.key].default_node_pool.only_critical_addons_enabled
-    orchestrator_version         = local.kubernetes_cluster[each.key].default_node_pool.orchestrator_version
+    orchestrator_version         = local.kubernetes_cluster[each.key].default_node_pool.orchestrator_version == null ? data.azurerm_kubernetes_service_versions.kubernetes_service_versions[each.key].latest_version : local.kubernetes_cluster[each.key].default_node_pool.orchestrator_version
     os_disk_size_gb              = local.kubernetes_cluster[each.key].default_node_pool.os_disk_size_gb
     os_disk_type                 = local.kubernetes_cluster[each.key].default_node_pool.os_disk_type
     os_sku                       = local.kubernetes_cluster[each.key].default_node_pool.os_sku
@@ -60,30 +60,34 @@ resource "azurerm_kubernetes_cluster" "kubernetes_cluster" {
     type                         = local.kubernetes_cluster[each.key].default_node_pool.type
     ultra_ssd_enabled            = local.kubernetes_cluster[each.key].default_node_pool.ultra_ssd_enabled
     vnet_subnet_id               = local.kubernetes_cluster[each.key].default_node_pool.vnet_subnet_id
+    zones                        = local.kubernetes_cluster[each.key].default_node_pool.enable_auto_scaling == true ? null : local.kubernetes_cluster[each.key].default_node_pool.zones
 
-    kubelet_config {
-      allowed_unsafe_sysctls    = local.kubernetes_cluster[each.key].default_node_pool.kubelet_config.allowed_unsafe_sysctls
-      container_log_max_line    = local.kubernetes_cluster[each.key].default_node_pool.kubelet_config.container_log_max_line
-      container_log_max_size_mb = local.kubernetes_cluster[each.key].default_node_pool.kubelet_config.container_log_max_size_mb
-      cpu_cfs_quota_enabled     = local.kubernetes_cluster[each.key].default_node_pool.kubelet_config.cpu_cfs_quota_enabled
-      cpu_cfs_quota_period      = local.kubernetes_cluster[each.key].default_node_pool.kubelet_config.cpu_cfs_quota_period
-      cpu_manager_policy        = local.kubernetes_cluster[each.key].default_node_pool.kubelet_config.cpu_manager_policy
-      image_gc_high_threshold   = local.kubernetes_cluster[each.key].default_node_pool.kubelet_config.image_gc_high_threshold
-      image_gc_low_threshold    = local.kubernetes_cluster[each.key].default_node_pool.kubelet_config.image_gc_low_threshold
-      pod_max_pid               = local.kubernetes_cluster[each.key].default_node_pool.kubelet_config.pod_max_pid
-      topology_manager_policy   = local.kubernetes_cluster[each.key].default_node_pool.kubelet_config.topology_manager_policy
-    }
+    // dynamic "kubelet_config" {
+    //   for_each = values(local.kubernetes_cluster[each.key].default_node_pool.kubelet_config) != null ? [1] : []
 
-    dynamic "linux_os_config" {
-      for_each = local.kubernetes_cluster[each.key].default_node_pool.os_sku != null ? [1] : []
+    //   content {
+    //     allowed_unsafe_sysctls    = local.kubernetes_cluster[each.key].default_node_pool.kubelet_config.allowed_unsafe_sysctls
+    //     container_log_max_line    = local.kubernetes_cluster[each.key].default_node_pool.kubelet_config.container_log_max_line
+    //     container_log_max_size_mb = local.kubernetes_cluster[each.key].default_node_pool.kubelet_config.container_log_max_size_mb
+    //     cpu_cfs_quota_enabled     = local.kubernetes_cluster[each.key].default_node_pool.kubelet_config.cpu_cfs_quota_enabled
+    //     cpu_cfs_quota_period      = local.kubernetes_cluster[each.key].default_node_pool.kubelet_config.cpu_cfs_quota_period
+    //     cpu_manager_policy        = local.kubernetes_cluster[each.key].default_node_pool.kubelet_config.cpu_manager_policy
+    //     image_gc_high_threshold   = local.kubernetes_cluster[each.key].default_node_pool.kubelet_config.image_gc_high_threshold
+    //     image_gc_low_threshold    = local.kubernetes_cluster[each.key].default_node_pool.kubelet_config.image_gc_low_threshold
+    //     pod_max_pid               = local.kubernetes_cluster[each.key].default_node_pool.kubelet_config.pod_max_pid
+    //     topology_manager_policy   = local.kubernetes_cluster[each.key].default_node_pool.kubelet_config.topology_manager_policy
+    //   }
+    // }
 
-      content {
-        swap_file_size_mb             = local.kubernetes_cluster[each.key].default_node_pool.linux_os_config.swap_file_size_mb
-        transparent_huge_page_defrag  = local.kubernetes_cluster[each.key].default_node_pool.linux_os_config.transparent_huge_page_defrag
-        transparent_huge_page_enabled = local.kubernetes_cluster[each.key].default_node_pool.linux_os_config.transparent_huge_page_enabled
-        sysctl_config {}
-      }
-    }
+    // dynamic "linux_os_config" {
+    //   for_each = local.kubernetes_cluster[each.key].default_node_pool.os_sku != null ? [1] : []
+
+    //   content {
+    //     swap_file_size_mb             = local.kubernetes_cluster[each.key].default_node_pool.linux_os_config.swap_file_size_mb
+    //     transparent_huge_page_defrag  = local.kubernetes_cluster[each.key].default_node_pool.linux_os_config.transparent_huge_page_defrag
+    //     transparent_huge_page_enabled = local.kubernetes_cluster[each.key].default_node_pool.linux_os_config.transparent_huge_page_enabled
+    //   }
+    // }
 
     dynamic "upgrade_settings" {
       for_each = local.kubernetes_cluster[each.key].default_node_pool.upgrade_settings.max_surge != "" ? [1] : []
