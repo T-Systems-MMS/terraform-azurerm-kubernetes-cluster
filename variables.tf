@@ -54,10 +54,10 @@ locals {
         vnet_subnet_id               = null
         kubelet_config               = {}
         linux_os_config              = {}
-        upgrade_settings             = {
+        upgrade_settings = {
           max_surge = ""
         }
-        tags                         = {}
+        tags = {}
       }
       service_principal = {}
       identity = {
@@ -106,7 +106,7 @@ locals {
       kubelet_identity = {}
       linux_profile = {
         admin_username = ""
-        ssh_key        = {
+        ssh_key = {
           key_data = ""
         }
       }
@@ -118,22 +118,22 @@ locals {
         log_analytics_workspace_id = ""
       }
       network_profile = {
-        network_plugin        = "azure"
-        network_mode          = null
-        network_policy        = null
-        dns_service_ip        = null
-        docker_bridge_cidr    = null
-        outbound_type         = "loadBalancer"
-        pod_cidr              = null
-        service_cidr          = null
-        ip_versions           = ["IPv4"]
-        load_balancer_sku     = "standard"
+        network_plugin     = "azure"
+        network_mode       = null
+        network_policy     = null
+        dns_service_ip     = null
+        docker_bridge_cidr = null
+        outbound_type      = "loadBalancer"
+        pod_cidr           = null
+        service_cidr       = null
+        ip_versions        = ["IPv4"]
+        load_balancer_sku  = "standard"
         load_balancer_profile = {
-          idle_timeout_in_minutes  = 30
-          managed_outbound_ip_count  = 1
-          outbound_ip_address_ids = null
-          outbound_ip_prefix_ids = null
-          outbound_ports_allocated = 0
+          idle_timeout_in_minutes   = 30
+          managed_outbound_ip_count = 1
+          outbound_ip_address_ids   = null
+          outbound_ip_prefix_ids    = null
+          outbound_ports_allocated  = 0
         }
         nat_gateway_profile = {}
       }

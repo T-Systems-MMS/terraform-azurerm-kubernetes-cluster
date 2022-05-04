@@ -203,7 +203,7 @@ resource "azurerm_kubernetes_cluster" "kubernetes_cluster" {
       admin_username = local.kubernetes_cluster[each.key].linux_profile.admin_username
 
       ssh_key {
-          key_data = local.kubernetes_cluster[each.key].linux_profile.ssh_key.key_data
+        key_data = local.kubernetes_cluster[each.key].linux_profile.ssh_key.key_data
       }
     }
   }
@@ -216,7 +216,7 @@ resource "azurerm_kubernetes_cluster" "kubernetes_cluster" {
         for_each = local.kubernetes_cluster[each.key].maintenance_window.allowed != {} ? [1] : []
 
         content {
-          day = local.kubernetes_cluster[each.key].maintenance_window.allowed[allowed.key].day
+          day   = local.kubernetes_cluster[each.key].maintenance_window.allowed[allowed.key].day
           hours = local.kubernetes_cluster[each.key].maintenance_window.allowed[allowed.key].hours
         }
       }
@@ -224,7 +224,7 @@ resource "azurerm_kubernetes_cluster" "kubernetes_cluster" {
         for_each = local.kubernetes_cluster[each.key].maintenance_window.not_allowed != {} ? [1] : []
 
         content {
-          end = local.kubernetes_cluster[each.key].maintenance_window.not_allowed[not_allowed.key].end
+          end   = local.kubernetes_cluster[each.key].maintenance_window.not_allowed[not_allowed.key].end
           start = local.kubernetes_cluster[each.key].maintenance_window.not_allowed[not_allowed.key].start
         }
       }
