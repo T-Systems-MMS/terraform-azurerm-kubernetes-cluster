@@ -62,32 +62,32 @@ resource "azurerm_kubernetes_cluster" "kubernetes_cluster" {
     vnet_subnet_id               = local.kubernetes_cluster[each.key].default_node_pool.vnet_subnet_id
     zones                        = local.kubernetes_cluster[each.key].default_node_pool.enable_auto_scaling == true ? null : local.kubernetes_cluster[each.key].default_node_pool.zones
 
-    // dynamic "kubelet_config" {
-    //   for_each = values(local.kubernetes_cluster[each.key].default_node_pool.kubelet_config) != null ? [1] : []
+    dynamic "kubelet_config" {
+      for_each = local.kubernetes_cluster[each.key].default_node_pool.kubelet_config != {} ? [1] : []
 
-    //   content {
-    //     allowed_unsafe_sysctls    = local.kubernetes_cluster[each.key].default_node_pool.kubelet_config.allowed_unsafe_sysctls
-    //     container_log_max_line    = local.kubernetes_cluster[each.key].default_node_pool.kubelet_config.container_log_max_line
-    //     container_log_max_size_mb = local.kubernetes_cluster[each.key].default_node_pool.kubelet_config.container_log_max_size_mb
-    //     cpu_cfs_quota_enabled     = local.kubernetes_cluster[each.key].default_node_pool.kubelet_config.cpu_cfs_quota_enabled
-    //     cpu_cfs_quota_period      = local.kubernetes_cluster[each.key].default_node_pool.kubelet_config.cpu_cfs_quota_period
-    //     cpu_manager_policy        = local.kubernetes_cluster[each.key].default_node_pool.kubelet_config.cpu_manager_policy
-    //     image_gc_high_threshold   = local.kubernetes_cluster[each.key].default_node_pool.kubelet_config.image_gc_high_threshold
-    //     image_gc_low_threshold    = local.kubernetes_cluster[each.key].default_node_pool.kubelet_config.image_gc_low_threshold
-    //     pod_max_pid               = local.kubernetes_cluster[each.key].default_node_pool.kubelet_config.pod_max_pid
-    //     topology_manager_policy   = local.kubernetes_cluster[each.key].default_node_pool.kubelet_config.topology_manager_policy
-    //   }
-    // }
+      content {
+        allowed_unsafe_sysctls    = local.kubernetes_cluster[each.key].default_node_pool.kubelet_config.allowed_unsafe_sysctls
+        container_log_max_line    = local.kubernetes_cluster[each.key].default_node_pool.kubelet_config.container_log_max_line
+        container_log_max_size_mb = local.kubernetes_cluster[each.key].default_node_pool.kubelet_config.container_log_max_size_mb
+        cpu_cfs_quota_enabled     = local.kubernetes_cluster[each.key].default_node_pool.kubelet_config.cpu_cfs_quota_enabled
+        cpu_cfs_quota_period      = local.kubernetes_cluster[each.key].default_node_pool.kubelet_config.cpu_cfs_quota_period
+        cpu_manager_policy        = local.kubernetes_cluster[each.key].default_node_pool.kubelet_config.cpu_manager_policy
+        image_gc_high_threshold   = local.kubernetes_cluster[each.key].default_node_pool.kubelet_config.image_gc_high_threshold
+        image_gc_low_threshold    = local.kubernetes_cluster[each.key].default_node_pool.kubelet_config.image_gc_low_threshold
+        pod_max_pid               = local.kubernetes_cluster[each.key].default_node_pool.kubelet_config.pod_max_pid
+        topology_manager_policy   = local.kubernetes_cluster[each.key].default_node_pool.kubelet_config.topology_manager_policy
+      }
+    }
 
-    // dynamic "linux_os_config" {
-    //   for_each = local.kubernetes_cluster[each.key].default_node_pool.os_sku != null ? [1] : []
+    dynamic "linux_os_config" {
+      for_each = local.kubernetes_cluster[each.key].default_node_pool.linux_os_config != {} ? [1] : []
 
-    //   content {
-    //     swap_file_size_mb             = local.kubernetes_cluster[each.key].default_node_pool.linux_os_config.swap_file_size_mb
-    //     transparent_huge_page_defrag  = local.kubernetes_cluster[each.key].default_node_pool.linux_os_config.transparent_huge_page_defrag
-    //     transparent_huge_page_enabled = local.kubernetes_cluster[each.key].default_node_pool.linux_os_config.transparent_huge_page_enabled
-    //   }
-    // }
+      content {
+        swap_file_size_mb             = local.kubernetes_cluster[each.key].default_node_pool.linux_os_config.swap_file_size_mb
+        transparent_huge_page_defrag  = local.kubernetes_cluster[each.key].default_node_pool.linux_os_config.transparent_huge_page_defrag
+        transparent_huge_page_enabled = local.kubernetes_cluster[each.key].default_node_pool.linux_os_config.transparent_huge_page_enabled
+      }
+    }
 
     dynamic "upgrade_settings" {
       for_each = local.kubernetes_cluster[each.key].default_node_pool.upgrade_settings.max_surge != "" ? [1] : []
@@ -262,9 +262,13 @@ resource "azurerm_kubernetes_cluster" "kubernetes_cluster" {
         outbound_ports_allocated  = local.kubernetes_cluster[each.key].network_profile.load_balancer_profile.outbound_ports_allocated
       }
 
-      nat_gateway_profile {
-        idle_timeout_in_minutes   = local.kubernetes_cluster[each.key].network_profile.nat_gateway_profile.idle_timeout_in_minutes
-        managed_outbound_ip_count = local.kubernetes_cluster[each.key].network_profile.nat_gateway_profile.managed_outbound_ip_count
+      dynamic "nat_gateway_profile" {
+        for_each = local.kubernetes_cluster[each.key].network_profile.nat_gateway_profile != {} ? [1] : []
+
+        content {
+          idle_timeout_in_minutes   = local.kubernetes_cluster[each.key].network_profile.nat_gateway_profile.idle_timeout_in_minutes
+          managed_outbound_ip_count = local.kubernetes_cluster[each.key].network_profile.nat_gateway_profile.managed_outbound_ip_count
+        }
       }
     }
   }

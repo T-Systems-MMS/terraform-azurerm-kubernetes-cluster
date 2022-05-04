@@ -52,24 +52,8 @@ locals {
         type                         = "VirtualMachineScaleSets"
         ultra_ssd_enabled            = false
         vnet_subnet_id               = null
-        kubelet_config               = {
-          allowed_unsafe_sysctls = null
-          container_log_max_line = null
-          container_log_max_size_mb = null
-          cpu_cfs_quota_enabled = null
-          cpu_cfs_quota_period = null
-          cpu_manager_policy = null
-          image_gc_high_threshold = null
-          image_gc_low_threshold = null
-          pod_max_pid = null
-          topology_manager_policy = null
-        }
-        linux_os_config              = {
-          swap_file_size_mb = null
-          transparent_huge_page_defrag = null
-          transparent_huge_page_enabled = null
-          sysctl_config = {}
-        }
+        kubelet_config               = {}
+        linux_os_config              = {}
         upgrade_settings             = {
           max_surge = ""
         }
@@ -134,15 +118,15 @@ locals {
         log_analytics_workspace_id = ""
       }
       network_profile = {
-        network_plugin        = ""
+        network_plugin        = "azure"
         network_mode          = null
-        network_policy        = "azure"
+        network_policy        = null
         dns_service_ip        = null
         docker_bridge_cidr    = null
         outbound_type         = "loadBalancer"
         pod_cidr              = null
         service_cidr          = null
-        ip_versions           = "IPv4"
+        ip_versions           = ["IPv4"]
         load_balancer_sku     = "standard"
         load_balancer_profile = {
           idle_timeout_in_minutes  = 30
@@ -151,10 +135,7 @@ locals {
           outbound_ip_prefix_ids = null
           outbound_ports_allocated = 0
         }
-        nat_gateway_profile   = {
-          idle_timeout_in_minutes = 4
-          managed_outbound_ip_count = 1
-        }
+        nat_gateway_profile = {}
       }
       oms_agent = {
         log_analytics_workspace_id = ""
