@@ -9,62 +9,140 @@ locals {
     # resource definition
     kubernetes_cluster = {
       name                                = ""
-      dns_prefix                          = ""
-      node_resource_group                 = ""
-      api_server_authorized_ip_ranges     = []
+      dns_prefix                          = null
+      dns_prefix_private_cluster          = null
+      automatic_channel_upgrade           = null
+      azure_policy_enabled                = false
+      disk_encryption_set_id              = null
+      http_application_routing_enabled    = false
+      kubernetes_version                  = null
       local_account_disabled              = false
+      node_resource_group                 = null
+      oidc_issuer_enabled                 = false
+      open_service_mesh_enabled           = null
       private_cluster_enabled             = false
+      private_dns_zone_id                 = null
       private_cluster_public_fqdn_enabled = false
+      public_network_access_enabled       = true
+      role_based_access_control_enabled   = true
       sku_tier                            = "Free"
-      role_based_access_control = {
-        enabled = true
-      }
-      service_principal = {
-        client_id = ""
-      }
-      identity = {
-        type = ""
-      }
-      kubelet_identity = {
-        client_id = ""
-      }
-      network_profile = {
-        network_plugin    = "azure"
-        load_balancer_sku = "standard"
+      aci_connector_linux = {
+        subnet_name = ""
       }
       default_node_pool = {
-        name                   = ""
-        availability_zones     = [1, 2, 3]
-        enable_auto_scaling    = true
-        enable_host_encryption = false
-        enable_node_public_ip  = false
-        type                   = "VirtualMachineScaleSets"
-        node_count             = ""
-        min_count              = ""
-        max_count              = ""
-        ultra_ssd_enabled      = false
-        tags                   = {}
+        name                         = ""
+        enable_auto_scaling          = true
+        max_count                    = 10
+        min_count                    = 2
+        node_count                   = 2
+        zones                        = [1, 2, 3]
+        enable_host_encryption       = false
+        enable_node_public_ip        = false
+        fips_enabled                 = false
+        kubelet_disk_type            = null
+        max_pods                     = null
+        node_public_ip_prefix_id     = null
+        node_labels                  = null
+        only_critical_addons_enabled = null
+        orchestrator_version         = null
+        os_disk_size_gb              = null
+        os_disk_type                 = "Ephemeral"
+        os_sku                       = "Ubuntu"
+        pod_subnet_id                = null
+        type                         = "VirtualMachineScaleSets"
+        ultra_ssd_enabled            = false
+        vnet_subnet_id               = null
+        kubelet_config               = {}
+        linux_os_config              = {}
+        upgrade_settings = {
+          max_surge = ""
+        }
+        tags = {}
       }
-      addon_profile = {
-        aci_connector_linux = {
-          enabled = false
-        }
-        azure_policy = {
-          enabled = false
-        }
-        http_application_routing = {
-          enabled = false
-        }
-        kube_dashboard = {
-          enabled = false
-        }
-        oms_agent = {
-          enabled = false
-        }
+      service_principal = {}
+      identity = {
+        type         = ""
+        identity_ids = null
       }
+      auto_scaler_profile = {
+        balance_similar_node_groups      = false
+        expander                         = "random"
+        max_graceful_termination_sec     = 600
+        max_node_provisioning_time       = "15m"
+        max_unready_nodes                = 2
+        max_unready_percentage           = 45
+        new_pod_scale_up_delay           = "10s"
+        scale_down_delay_after_add       = "10m"
+        scale_down_delay_after_delete    = "scan_interval"
+        scale_down_delay_after_failure   = "2m"
+        scan_interval                    = "10s"
+        scale_down_unneeded              = "10m"
+        scale_down_unready               = "10m"
+        scale_down_utilization_threshold = "0.5"
+        empty_bulk_delete_max            = 10
+        skip_nodes_with_local_storage    = true
+        skip_nodes_with_system_pods      = true
+      }
+      azure_active_directory_role_based_access_control = {
+        managed                = null
+        tenant_id              = null
+        admin_group_object_ids = null
+        azure_rbac_enabled     = null
+      }
+      http_proxy_config = {
+        http_proxy  = null
+        https_proxy = null
+        no_proxy    = null
+        trusted_ca  = null
+      }
+      ingress_application_gateway = {
+        effective_gateway_id                 = ""
+        ingress_application_gateway_identity = {}
+      }
+      key_vault_secrets_provider = {
+        secret_rotation_enabled  = "false"
+        secret_rotation_interval = "2m"
+      }
+      kubelet_identity = {}
       linux_profile = {
         admin_username = ""
-        ssh_key        = {}
+        ssh_key = {
+          key_data = ""
+        }
+      }
+      maintenance_window = {
+        allowed     = {}
+        not_allowed = {}
+      }
+      microsoft_defender = {
+        log_analytics_workspace_id = ""
+      }
+      network_profile = {
+        network_plugin     = "azure"
+        network_mode       = null
+        network_policy     = null
+        dns_service_ip     = null
+        docker_bridge_cidr = null
+        outbound_type      = "loadBalancer"
+        pod_cidr           = null
+        service_cidr       = null
+        ip_versions        = ["IPv4"]
+        load_balancer_sku  = "standard"
+        load_balancer_profile = {
+          idle_timeout_in_minutes   = 30
+          managed_outbound_ip_count = 1
+          outbound_ip_address_ids   = null
+          outbound_ip_prefix_ids    = null
+          outbound_ports_allocated  = 0
+        }
+        nat_gateway_profile = {}
+      }
+      oms_agent = {
+        log_analytics_workspace_id = ""
+      }
+      windows_profile = {
+        admin_username = ""
+        license        = "Windows_Server"
       }
     }
   }
@@ -80,12 +158,26 @@ locals {
     kubernetes_cluster => merge(
       local.kubernetes_cluster_values[kubernetes_cluster],
       {
-        for config in ["role_based_access_control", "service_principal", "network_profile", "default_node_pool", "addon_profile"] :
+        for config in [
+          "aci_connector_linux",
+          "default_node_pool",
+          "service_principal",
+          "identity",
+          "auto_scaler_profile",
+          "azure_active_directory_role_based_access_control",
+          "http_proxy_config",
+          "ingress_application_gateway",
+          "key_vault_secrets_provider",
+          "kubelet_identity",
+          "linux_profile",
+          "maintenance_window",
+          "microsoft_defender",
+          "network_profile",
+          "oms_agent",
+          "windows_profile"
+        ] :
         config => merge(local.default.kubernetes_cluster[config], local.kubernetes_cluster_values[kubernetes_cluster][config])
       }
     )
   }
 }
-
-
-
