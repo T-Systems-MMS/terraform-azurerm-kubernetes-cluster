@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.0](https://github.com/T-Systems-MMS/terraform-azurerm-kubernetes-cluster/tree/1.0.0) (2022-02-17)
+
+[Full Changelog](https://github.com/T-Systems-MMS/terraform-azurerm-kubernetes-cluster/compare/0.0.1...1.0.0)
+
+**Merged pull requests:**
+
+- change variable behaviour [\#1](https://github.com/T-Systems-MMS/terraform-azurerm-kubernetes-cluster/pull/1) ([michaelamattes](https://github.com/michaelamattes))
+
 ## [0.0.1](https://github.com/T-Systems-MMS/terraform-azurerm-kubernetes-cluster/tree/0.0.1) (2022-01-06)
 
 [Full Changelog](https://github.com/T-Systems-MMS/terraform-azurerm-kubernetes-cluster/compare/95c5efbb17115d7abb04f3a62000f47bc1e1cb97...0.0.1)
