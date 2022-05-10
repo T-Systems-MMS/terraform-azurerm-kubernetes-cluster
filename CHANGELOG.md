@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.0.0](https://github.com/T-Systems-MMS/terraform-azurerm-kubernetes-cluster/tree/2.0.0) (2022-05-09)
+
+[Full Changelog](https://github.com/T-Systems-MMS/terraform-azurerm-kubernetes-cluster/compare/1.0.0...2.0.0)
+
+**Implemented enhancements:**
+
+- Azurerm 3.x [\#2](https://github.com/T-Systems-MMS/terraform-azurerm-kubernetes-cluster/pull/2) ([michaelamattes](https://github.com/michaelamattes))
+
+**Merged pull requests:**
+
+- Update hashicorp/setup-terraform action to v2 [\#10](https://github.com/T-Systems-MMS/terraform-azurerm-kubernetes-cluster/pull/10) ([renovate[bot]](https://github.com/apps/renovate))
+- Update creyD/prettier\_action action to v4 [\#9](https://github.com/T-Systems-MMS/terraform-azurerm-kubernetes-cluster/pull/9) ([renovate[bot]](https://github.com/apps/renovate))
+- Update actions/checkout action [\#8](https://github.com/T-Systems-MMS/terraform-azurerm-kubernetes-cluster/pull/8) ([renovate[bot]](https://github.com/apps/renovate))
+- Update github-actions-x/commit action to v2.9 [\#7](https://github.com/T-Systems-MMS/terraform-azurerm-kubernetes-cluster/pull/7) ([renovate[bot]](https://github.com/apps/renovate))
+- add renovate config [\#3](https://github.com/T-Systems-MMS/terraform-azurerm-kubernetes-cluster/pull/3) ([michaelamattes](https://github.com/michaelamattes))
+
 ## [1.0.0](https://github.com/T-Systems-MMS/terraform-azurerm-kubernetes-cluster/tree/1.0.0) (2022-02-17)
 
 [Full Changelog](https://github.com/T-Systems-MMS/terraform-azurerm-kubernetes-cluster/compare/0.0.1...1.0.0)

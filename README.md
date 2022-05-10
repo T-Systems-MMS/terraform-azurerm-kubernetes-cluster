@@ -10,13 +10,13 @@ This module manages Azure Kubernetes Cluster.
 | Name | Version |
 |------|---------|
 | terraform | ~>1.1 |
-| azurerm | >=3.3.0 |
+| azurerm | >=3.5.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| azurerm | >=3.3.0 |
+| azurerm | >=3.5.0 |
 
 ## Resources
 
