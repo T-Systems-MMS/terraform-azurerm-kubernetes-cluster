@@ -26,6 +26,7 @@ locals {
       public_network_access_enabled       = true
       role_based_access_control_enabled   = true
       sku_tier                            = "Free"
+      run_command_enabled                 = true
       aci_connector_linux = {
         subnet_name = ""
       }
@@ -129,13 +130,16 @@ locals {
         ip_versions        = ["IPv4"]
         load_balancer_sku  = "standard"
         load_balancer_profile = {
-          idle_timeout_in_minutes   = 30
+          idle_timeout_in_minutes   = 0
           managed_outbound_ip_count = 1
           outbound_ip_address_ids   = null
           outbound_ip_prefix_ids    = null
           outbound_ports_allocated  = 0
         }
-        nat_gateway_profile = {}
+        nat_gateway_profile = {
+          idle_timeout_in_minutes   = 0
+          managed_outbound_ip_count = 1
+        }
       }
       oms_agent = {
         log_analytics_workspace_id = ""

@@ -28,6 +28,7 @@ resource "azurerm_kubernetes_cluster" "kubernetes_cluster" {
   public_network_access_enabled       = local.kubernetes_cluster[each.key].public_network_access_enabled
   role_based_access_control_enabled   = local.kubernetes_cluster[each.key].role_based_access_control_enabled
   sku_tier                            = local.kubernetes_cluster[each.key].sku_tier
+  run_command_enabled                 = local.kubernetes_cluster[each.key].run_command_enabled
 
   dynamic "aci_connector_linux" {
     for_each = local.kubernetes_cluster[each.key].aci_connector_linux.subnet_name != "" ? [1] : []
@@ -254,16 +255,20 @@ resource "azurerm_kubernetes_cluster" "kubernetes_cluster" {
       ip_versions        = local.kubernetes_cluster[each.key].network_profile.ip_versions
       load_balancer_sku  = local.kubernetes_cluster[each.key].network_profile.load_balancer_sku
 
-      load_balancer_profile {
-        idle_timeout_in_minutes   = local.kubernetes_cluster[each.key].network_profile.load_balancer_profile.idle_timeout_in_minutes
-        managed_outbound_ip_count = local.kubernetes_cluster[each.key].network_profile.load_balancer_profile.managed_outbound_ip_count
-        outbound_ip_address_ids   = local.kubernetes_cluster[each.key].network_profile.load_balancer_profile.outbound_ip_address_ids
-        outbound_ip_prefix_ids    = local.kubernetes_cluster[each.key].network_profile.load_balancer_profile.outbound_ip_prefix_ids
-        outbound_ports_allocated  = local.kubernetes_cluster[each.key].network_profile.load_balancer_profile.outbound_ports_allocated
+      dynamic "load_balancer_profile" {
+        for_each = local.kubernetes_cluster[each.key].network_profile.load_balancer_profile.idle_timeout_in_minutes != 0 ? [1] : []
+
+        content {
+          idle_timeout_in_minutes   = local.kubernetes_cluster[each.key].network_profile.load_balancer_profile.idle_timeout_in_minutes
+          managed_outbound_ip_count = local.kubernetes_cluster[each.key].network_profile.load_balancer_profile.managed_outbound_ip_count
+          outbound_ip_address_ids   = local.kubernetes_cluster[each.key].network_profile.load_balancer_profile.outbound_ip_address_ids
+          outbound_ip_prefix_ids    = local.kubernetes_cluster[each.key].network_profile.load_balancer_profile.outbound_ip_prefix_ids
+          outbound_ports_allocated  = local.kubernetes_cluster[each.key].network_profile.load_balancer_profile.outbound_ports_allocated
+        }
       }
 
       dynamic "nat_gateway_profile" {
-        for_each = local.kubernetes_cluster[each.key].network_profile.nat_gateway_profile != {} ? [1] : []
+        for_each = local.kubernetes_cluster[each.key].network_profile.nat_gateway_profile.idle_timeout_in_minutes != 0 ? [1] : []
 
         content {
           idle_timeout_in_minutes   = local.kubernetes_cluster[each.key].network_profile.nat_gateway_profile.idle_timeout_in_minutes
