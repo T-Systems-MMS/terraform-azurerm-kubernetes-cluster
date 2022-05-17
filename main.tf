@@ -61,7 +61,7 @@ resource "azurerm_kubernetes_cluster" "kubernetes_cluster" {
     type                         = local.kubernetes_cluster[each.key].default_node_pool.type
     ultra_ssd_enabled            = local.kubernetes_cluster[each.key].default_node_pool.ultra_ssd_enabled
     vnet_subnet_id               = local.kubernetes_cluster[each.key].default_node_pool.vnet_subnet_id
-    zones                        = local.kubernetes_cluster[each.key].default_node_pool.enable_auto_scaling == true ? null : local.kubernetes_cluster[each.key].default_node_pool.zones
+    zones                        = local.kubernetes_cluster[each.key].default_node_pool.zones
 
     dynamic "kubelet_config" {
       for_each = local.kubernetes_cluster[each.key].default_node_pool.kubelet_config != {} ? [1] : []
@@ -130,7 +130,7 @@ resource "azurerm_kubernetes_cluster" "kubernetes_cluster" {
       max_unready_percentage           = local.kubernetes_cluster[each.key].auto_scaler_profile.max_unready_percentage
       new_pod_scale_up_delay           = local.kubernetes_cluster[each.key].auto_scaler_profile.new_pod_scale_up_delay
       scale_down_delay_after_add       = local.kubernetes_cluster[each.key].auto_scaler_profile.scale_down_delay_after_add
-      scale_down_delay_after_delete    = local.kubernetes_cluster[each.key].auto_scaler_profile.scale_down_delay_after_delete
+      scale_down_delay_after_delete    = local.kubernetes_cluster[each.key].auto_scaler_profile.scale_down_delay_after_delete == "" ? local.kubernetes_cluster[each.key].auto_scaler_profile.scan_interval : local.kubernetes_cluster[each.key].auto_scaler_profile.scale_down_delay_after_delete
       scale_down_delay_after_failure   = local.kubernetes_cluster[each.key].auto_scaler_profile.scale_down_delay_after_failure
       scan_interval                    = local.kubernetes_cluster[each.key].auto_scaler_profile.scan_interval
       scale_down_unneeded              = local.kubernetes_cluster[each.key].auto_scaler_profile.scale_down_unneeded
