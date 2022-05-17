@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.0.2](https://github.com/T-Systems-MMS/terraform-azurerm-kubernetes-cluster/tree/2.0.2) (2022-05-17)
+
+[Full Changelog](https://github.com/T-Systems-MMS/terraform-azurerm-kubernetes-cluster/compare/2.0.1...2.0.2)
+
+**Fixed bugs:**
+
+- change default for run\_command\_enabled [\#13](https://github.com/T-Systems-MMS/terraform-azurerm-kubernetes-cluster/pull/13) ([michaelamattes](https://github.com/michaelamattes))
+
 ## [2.0.1](https://github.com/T-Systems-MMS/terraform-azurerm-kubernetes-cluster/tree/2.0.1) (2022-05-10)
 
 [Full Changelog](https://github.com/T-Systems-MMS/terraform-azurerm-kubernetes-cluster/compare/2.0.0...2.0.1)
