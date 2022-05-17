@@ -26,7 +26,7 @@ locals {
       public_network_access_enabled       = true
       role_based_access_control_enabled   = true
       sku_tier                            = "Free"
-      run_command_enabled                 = true
+      run_command_enabled                 = false
       aci_connector_linux = {
         subnet_name = ""
       }
