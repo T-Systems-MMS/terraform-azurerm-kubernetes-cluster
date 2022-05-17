@@ -74,7 +74,7 @@ locals {
         max_unready_percentage           = 45
         new_pod_scale_up_delay           = "10s"
         scale_down_delay_after_add       = "10m"
-        scale_down_delay_after_delete    = "scan_interval"
+        scale_down_delay_after_delete    = ""
         scale_down_delay_after_failure   = "2m"
         scan_interval                    = "10s"
         scale_down_unneeded              = "10m"
