@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.0.3](https://github.com/T-Systems-MMS/terraform-azurerm-kubernetes-cluster/tree/2.0.3) (2022-05-17)
+
+[Full Changelog](https://github.com/T-Systems-MMS/terraform-azurerm-kubernetes-cluster/compare/2.0.2...2.0.3)
+
+**Implemented enhancements:**
+
+- change attribute defaults [\#14](https://github.com/T-Systems-MMS/terraform-azurerm-kubernetes-cluster/pull/14) ([michaelamattes](https://github.com/michaelamattes))
+
 ## [2.0.2](https://github.com/T-Systems-MMS/terraform-azurerm-kubernetes-cluster/tree/2.0.2) (2022-05-17)
 
 [Full Changelog](https://github.com/T-Systems-MMS/terraform-azurerm-kubernetes-cluster/compare/2.0.1...2.0.2)
