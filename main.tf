@@ -13,7 +13,6 @@ resource "azurerm_kubernetes_cluster" "kubernetes_cluster" {
   dns_prefix                          = local.kubernetes_cluster[each.key].dns_prefix
   dns_prefix_private_cluster          = local.kubernetes_cluster[each.key].dns_prefix_private_cluster
   automatic_channel_upgrade           = local.kubernetes_cluster[each.key].automatic_channel_upgrade
-  api_server_authorized_ip_ranges     = local.kubernetes_cluster[each.key].api_server_authorized_ip_ranges
   azure_policy_enabled                = local.kubernetes_cluster[each.key].azure_policy_enabled
   disk_encryption_set_id              = local.kubernetes_cluster[each.key].disk_encryption_set_id
   http_application_routing_enabled    = local.kubernetes_cluster[each.key].http_application_routing_enabled
@@ -30,6 +29,9 @@ resource "azurerm_kubernetes_cluster" "kubernetes_cluster" {
   sku_tier                            = local.kubernetes_cluster[each.key].sku_tier
   run_command_enabled                 = local.kubernetes_cluster[each.key].run_command_enabled
 
+  api_server_access_profile {
+    authorized_ip_ranges = local.kubernetes_cluster[each.key].api_server_authorized_ip_ranges
+  }
   dynamic "aci_connector_linux" {
     for_each = local.kubernetes_cluster[each.key].aci_connector_linux.subnet_name != "" ? [1] : []
 
