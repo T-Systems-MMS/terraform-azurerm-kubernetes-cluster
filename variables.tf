@@ -28,7 +28,7 @@ locals {
       sku_tier                            = "Free"
       run_command_enabled                 = false
 
-      api_server_access_profile {
+      api_server_access_profile = {
         authorized_ip_ranges     = null
         subnet_id                = null
         vnet_integration_enabled = null
