@@ -30,7 +30,9 @@ resource "azurerm_kubernetes_cluster" "kubernetes_cluster" {
   run_command_enabled                 = local.kubernetes_cluster[each.key].run_command_enabled
 
   api_server_access_profile {
-    authorized_ip_ranges = local.kubernetes_cluster[each.key].api_server_authorized_ip_ranges
+    authorized_ip_ranges     = local.kubernetes_cluster[each.key].api_server_authorized_ip_ranges
+    subnet_id                = local.kubernetes_cluster[each.key].api_server_subnet_id
+    vnet_integration_enabled = local.kubernetes_cluster[each.key].vnet_integration_enabled
   }
   dynamic "aci_connector_linux" {
     for_each = local.kubernetes_cluster[each.key].aci_connector_linux.subnet_name != "" ? [1] : []

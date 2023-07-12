@@ -27,6 +27,13 @@ locals {
       role_based_access_control_enabled   = true
       sku_tier                            = "Free"
       run_command_enabled                 = false
+
+      api_server_access_profile {
+        authorized_ip_ranges     = null
+        subnet_id                = null
+        vnet_integration_enabled = null
+      }
+
       aci_connector_linux = {
         subnet_name = ""
       }
