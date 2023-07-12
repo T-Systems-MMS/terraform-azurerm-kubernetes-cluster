@@ -31,7 +31,7 @@ locals {
       api_server_access_profile = {
         authorized_ip_ranges     = null
         subnet_id                = null
-        vnet_integration_enabled = null
+        vnet_integration_enabled = false
       }
 
       aci_connector_linux = {
